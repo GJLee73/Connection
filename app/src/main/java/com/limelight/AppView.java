@@ -61,6 +61,26 @@ public class AppView extends Activity implements AdapterFragmentCallbacks {
     public final static String NAME_EXTRA = "Name";
     public final static String UUID_EXTRA = "UUID";
 
+    @Override
+    public int getComputerCounts() {
+        return 0;
+    }
+
+    @Override
+    public void deleteComputer() {
+        //
+    }
+
+    @Override
+    public boolean pairComputer() {
+        return false;
+    }
+
+    @Override
+    public void listGame() {
+        //
+    }
+
     private ComputerManagerService.ComputerManagerBinder managerBinder;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder binder) {

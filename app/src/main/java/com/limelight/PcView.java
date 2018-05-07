@@ -21,6 +21,7 @@ import com.limelight.preferences.PreferenceConfiguration;
 import com.limelight.preferences.StreamSettings;
 import com.limelight.ui.AdapterFragment;
 import com.limelight.ui.AdapterFragmentCallbacks;
+import com.limelight.ui.TestFragment;
 import com.limelight.utils.Dialog;
 import com.limelight.utils.HelpLauncher;
 import com.limelight.utils.ServerHelper;
@@ -47,8 +48,10 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
@@ -56,6 +59,58 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class PcView extends Activity implements AdapterFragmentCallbacks {
+
+    // Changed
+    @Override
+    public int getComputerCounts() {
+        return pcGridAdapter.getCount();
+    }
+
+    @Override
+    public void deleteComputer() {
+        for (int i=0; i<pcGridAdapter.getCount(); i++) {
+            ComputerObject computer = (ComputerObject) pcGridAdapter.getItem(i);
+            managerBinder.removeComputer(computer.details.name);
+            removeComputer(computer.details);
+        }
+    }
+
+    @Override
+    public boolean pairComputer() {
+        if (pcGridAdapter.getCount() == 0) {
+            // 추가된 컴퓨터가 없을 때
+            Toast.makeText(PcView.this, "No Computers", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        ComputerObject computer = (ComputerObject) pcGridAdapter.getItem(0);
+        if (computer.details.pairState == PairState.PAIRED) {
+            // Already paired
+            Toast.makeText(PcView.this, "Already Paired", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        doPair(computer.details);
+        return true;
+    }
+
+    @Override
+    public void listGame() {
+        if (pcGridAdapter.getCount() == 0) {
+            // 추가된 컴퓨터가 없을 때
+            Toast.makeText(PcView.this, "No Computers", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ComputerObject computer = (ComputerObject) pcGridAdapter.getItem(0);
+        if (computer.details.pairState != PairState.PAIRED) {
+            Toast.makeText(PcView.this, "Not Paired", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //doAppList(computer.details);
+        Intent i = new Intent(this, AppView.class);
+        i.putExtra(AppView.NAME_EXTRA, computer.details.name);
+        i.putExtra(AppView.UUID_EXTRA, computer.details.uuid.toString());
+        startActivity(i);
+    }
+
     private RelativeLayout noPcFoundLayout;
     private PcGridAdapter pcGridAdapter;
     private ShortcutHelper shortcutHelper;
@@ -147,16 +202,19 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
         });
 
         getFragmentManager().beginTransaction()
-            .replace(R.id.pcFragmentContainer, new AdapterFragment())
+            .replace(R.id.pcFragmentContainer, new TestFragment())
             .commitAllowingStateLoss();
 
         noPcFoundLayout = findViewById(R.id.no_pc_found_layout);
+        noPcFoundLayout.setVisibility(View.INVISIBLE);
+
+        /*noPcFoundLayout = findViewById(R.id.no_pc_found_layout);
         if (pcGridAdapter.getCount() == 0) {
             noPcFoundLayout.setVisibility(View.VISIBLE);
         }
         else {
             noPcFoundLayout.setVisibility(View.INVISIBLE);
-        }
+        }*/
         pcGridAdapter.notifyDataSetChanged();
     }
 
@@ -616,10 +674,10 @@ public class PcView extends Activity implements AdapterFragmentCallbacks {
                 pcGridAdapter.removeComputer(computer);
                 pcGridAdapter.notifyDataSetChanged();
 
-                if (pcGridAdapter.getCount() == 0) {
+                /*if (pcGridAdapter.getCount() == 0) {
                     // Show the "Discovery in progress" view
                     noPcFoundLayout.setVisibility(View.VISIBLE);
-                }
+                }*/
 
                 break;
             }

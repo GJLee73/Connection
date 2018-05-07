@@ -37,7 +37,9 @@ public class AddComputerManually extends Activity {
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, final IBinder binder) {
             managerBinder = ((ComputerManagerService.ComputerManagerBinder)binder);
-            startAddThread();
+
+            // Changed
+            //startAddThread();
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -201,7 +203,18 @@ public class AddComputerManually extends Activity {
                         return true;
                     }
 
-                    computersToAdd.add(hostText.getText().toString().trim());
+                    // Changed
+                    //computersToAdd.add(hostText.getText().toString().trim());
+
+                    //doAddPc(hostText.getText().toString().trim());
+                    addThread = new Thread() {
+                        @Override
+                        public void run() {
+                            doAddPc(hostText.getText().toString().trim());
+                        }
+                    };
+                    addThread.setName("UI - AddComputerManually");
+                    addThread.start();
                 }
                 else if (actionId == EditorInfo.IME_ACTION_PREVIOUS) {
                     // This is how the Fire TV dismisses the keyboard

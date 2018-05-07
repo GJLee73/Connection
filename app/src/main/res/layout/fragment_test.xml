@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button_list"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/button_pair"
+        android:layout_centerInParent="true"
+        android:text="Game List"/>
+
+    <Button
+        android:id="@+id/button_pair"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/button_delete"
+        android:layout_centerInParent="true"
+        android:text="Pair"/>
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_above="@+id/button_testing"
+        android:layout_centerInParent="true"
+        android:text="Delete"/>
+
+    <Button
+        android:id="@+id/button_testing"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:text="Testing"/>
+
+    <TextView
+        android:id="@+id/text_testing"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/button_testing"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="Testing"/>
+
+</RelativeLayout>
